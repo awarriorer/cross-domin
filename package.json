@@ -1,0 +1,25 @@
+{
+  "name": "cross-domin",
+  "version": "1.0.0",
+  "description": "跨域方案实例",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/awarriorer/cross-domin.git"
+  },
+  "keywords": [
+    "corss-domin"
+  ],
+  "author": "awarriorer@163.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/awarriorer/cross-domin/issues"
+  },
+  "homepage": "https://github.com/awarriorer/cross-domin#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}

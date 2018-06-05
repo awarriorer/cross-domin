@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>cros示例</title>
+</head>
+<body>
+	
+	<button id="but">执行jsonp请求</button>
+	
+	<script type="text/javascript">
+		
+		window.onload = function(){
+			console.log("window.onload");
+
+			let but = document.querySelector("#but");
+
+			but.onclick = function(){
+				let options = {
+					methods: 'put',
+					url: 'http://dev.cros.com/get-name'
+				};
+
+				request(options, function(res){
+					console.log('cors...响应');
+					console.log(res.data);
+				})
+			}
+		}
+
+		function request(options, next){
+			var xhr = new XMLHttpRequest(); 
+
+			// 异步传输
+			xhr.open(options.methods.toLocaleUpperCase(), options.url, true);
+
+			//填充header
+			if(options.headers){		
+				for( var key in options.headers ){
+					xhr.setRequestHeader(key,options.headers[key]);
+				}
+			}
+
+			//发送请求
+			xhr.send(options.data || null);
+
+			xhr.onreadystatechange = function() {//Call a function when the state changes.
+				if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+					let response = xhr.responseText;
+
+					response = JSON.parse(response);
+
+					// 请求结束后,在此处写处理代码
+					next(response)
+				}
+			}
+		}
+
+	</script>
+</body>
+</html>

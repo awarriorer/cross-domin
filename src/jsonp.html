@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>jsonp示例</title>
+</head>
+<body>
+	<button id="but">执行jsonp请求</button>
+	
+	<script type="text/javascript">
+		window.onload = () =>{
+			let but = document.querySelector("#but");
+
+			but.onclick = function(){
+				createJsonp('http://127.0.0.1:3500/jsonp', function(res){
+					console.log('jsonp响应...');
+					console.log(res.data);
+				})
+			}
+		}
+
+		// 初始化请求个数
+		window.requestIndex = 0;
+
+		// 创建一个jsonp请求
+		function createJsonp(url, next){
+
+			// 请求次数自增，避免下次请求时回调执行絮乱
+			requestIndex++;
+
+			let funName = 'jsonpBack' + requestIndex;
+			let reqUrl  = url + '?callback=' + funName;
+
+			// 定义回调名称
+			window[funName] = function(res){
+				// 执行回调
+				next(res);
+				// 删除已经当前执行过的script
+				removeScript(funName);
+			}
+
+			// 创建标签
+			createScript(reqUrl, funName);
+
+			// 创建script标签
+			function createScript(requestUrl, id){
+				let script = document.createElement('script');
+
+				script.type = 'text/javascript';
+				script.src  = requestUrl;
+				script.id   = id;
+
+				// 追加元素
+				document.head.appendChild(script);
+			}
+
+			// 删除script 标签
+			function removeScript(id){
+				let script = document.querySelector('#' + id);
+
+				document.head.removeChild(script);
+			}
+
+		}
+	</script>
+</body>
+</html>
