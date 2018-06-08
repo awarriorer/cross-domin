@@ -1,5 +1,10 @@
-var express = require('express');
-var app     = express();
+var express    = require('express');
+var fileUpload = require('express-fileupload');
+var app        = express();
+
+
+// file
+app.use(fileUpload());
 
 var resData = {
 	status: 1,
@@ -17,7 +22,7 @@ app.get('/jsonp', function(req, res){
 
 
 // 配置cros
-app.all('/get-name', function(req, res, next) {
+app.all('*', function(req, res, next) {
 	//来访的域名
 	let origin   = req.headers.origin;
 	// 允许访问的白名单
@@ -41,10 +46,6 @@ app.all('/get-name', function(req, res, next) {
 });
 
 app.get('/get-name', function(req, res){
-	res.json(resData);
-});
-
-app.put('/get-name', function(req, res){
 	res.json(resData);
 });
 
