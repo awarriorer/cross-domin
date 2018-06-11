@@ -25,8 +25,6 @@ app.all('*', function(req, res, next) {
 	// 允许访问的白名单
 	let whitelist = [
 		'http://dev.test.com',
-		'http://dev.test2.com',
-		'http://dev.test3.com',
 	];
 
 	// 判断是否在名单内
