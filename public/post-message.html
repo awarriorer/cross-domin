@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>iframe-posMessage示例</title>
+</head>
+<body>
+	<button id="but">执行请求</button>
+
+	<iframe src="http://dev.example.com/iframe-postMessage" id="iframe" frameborder="0"></iframe>
+	
+	<script type="text/javascript">
+		window.onload = () =>{
+			let but = document.querySelector("#but");
+
+			but.onclick = function(){
+				let requestOptions = {
+					methods: 'get',
+					url: 'http://dev.example.com/get-name',
+				}
+
+				createRequest(requestOptions, function(res){
+					console.log('响应...');
+					console.log(res);
+				})
+			}
+		}
+
+		// 初始化请求个数
+		window.requestIndex = 0;
+
+		let iframe = window.frames[0];
+
+		// 创建一个请求
+		function createRequest(opt, next){
+			// 请求次数自增，避免下次请求时回调执行絮乱
+			requestIndex++;
+
+			// 回调函数名称
+			let funName = 'postMessageBack_' + requestIndex;
+
+			// 把请求标识带过去
+			opt.callback = funName;
+
+			// 定义回调名称
+			window[funName] = function(res){
+				// 执行回调
+				next(res);
+			}
+
+			let str = JSON.stringify(opt)
+
+			iframe.postMessage(str, '*');
+		}
+
+		window.addEventListener("message", function(event){
+			let data = {};
+
+			if(event.data){
+				data = JSON.parse(event.data);
+			}
+
+			let callbackName = data.callback;
+
+			if(callbackName){
+				delete data.callback;
+			}
+
+			// 执行回调
+			typeof window[callbackName] === 'function' && window[callbackName](data);
+
+		}, false);
+	</script>
+</body>
+</html>

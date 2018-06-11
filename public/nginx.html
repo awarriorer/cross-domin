@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>cros示例</title>
+	<title>nginx示例</title>
 </head>
 <body>
-	<button id="but">执行jsonp请求</button>
+	<button id="but">执行请求</button>
 	
 	<script type="text/javascript">
 
@@ -17,11 +17,12 @@
 			but.onclick = function(e){
 				let options = {
 					methods: 'get',
-					url: 'http://dev.cros.com/get-name',
+					//注意，这里是在请求本域名的api接口，但是本域名下并没有这个接口
+					url: '/api/get-name',
 				};
 
 				request(options, function(res){
-					console.log('cors...响应');
+					console.log('nginx...响应');
 					console.log(res.data);
 				})
 			}

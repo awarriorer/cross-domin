@@ -2,6 +2,10 @@ var express    = require('express');
 var fileUpload = require('express-fileupload');
 var app        = express();
 
+// view
+app.set('views', __dirname + '/view');//模板目录
+app.set('view engine', 'ejs'); //模板语法设置成ejs
+app.engine('ejs', require('ejs').__express);//
 
 // file
 app.use(fileUpload());
@@ -11,17 +15,10 @@ var resData = {
 	data: 'Hi, this is uncle-yang.'
 }
 
-// set router
-app.get('/', function(req, res){
-	res.send('Hello World!');
-});
-
-app.get('/jsonp', function(req, res){
-	res.jsonp(resData);
-});
-
-
-// 配置cros
+/**
+ * 配置cros
+ * 需要路由声明之前执行
+ */  
 app.all('*', function(req, res, next) {
 	//来访的域名
 	let origin   = req.headers.origin;
@@ -34,7 +31,7 @@ app.all('*', function(req, res, next) {
 
 	// 判断是否在名单内
 	if(whitelist.indexOf(origin) > -1){
-		res.header('Access-Control-Allow-Origin', origin);  
+		res.header('Access-Control-Allow-Origin', '*');  
 	    res.header('Access-Control-Allow-Headers', 'X-Requested-With');  
 	    res.header('Access-Control-Allow-Methods','PUT,POST,GET,DELETE,OPTIONS');  
 	    res.header('Content-Type', 'application/json;charset=utf-8');  		    
@@ -45,8 +42,28 @@ app.all('*', function(req, res, next) {
 	next();
 });
 
+// set router
+app.get('/', function(req, res){
+	res.send('Hello World!');
+});
+
+// 正常请求
 app.get('/get-name', function(req, res){
 	res.json(resData);
+});
+
+app.get('/api/get-name', function(req, res){
+	res.json(resData);
+});
+
+// jsonp
+app.get('/jsonp', function(req, res){
+	res.jsonp(resData);
+});
+
+// 通过iframe+postMessage的请求
+app.get('/iframe-postMessage', function(req, res){
+	res.render('post-message');
 });
 
 // start server
