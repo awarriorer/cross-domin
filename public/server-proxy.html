@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>nginx示例</title>
+	<title>server-proxy示例</title>
 </head>
 <body>
 	<button id="but">执行请求</button>
@@ -17,8 +17,8 @@
 			but.onclick = function(e){
 				let options = {
 					methods: 'get',
-					//注意，这里是在请求本域名的api接口，但是本域名下并没有这个接口
-					url: '/api/get-name',
+					//这里是在请求本域名的api接口
+					url: '/api-v2.0/get-name',
 				};
 
 				request(options, function(res){
