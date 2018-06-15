@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>iframe-form-postMessage-upload示例</title>
+</head>
+<body>
+	<input type="file" id="but">
+
+	<script type="text/javascript">
+
+		window.onload = function(){
+			console.log("window.onload");
+
+			let but = document.querySelector("#but");
+
+			but.onchange = function(e){
+				let options = {
+					methods: 'post',
+					data:{
+						image: e.target.files[0],
+					},
+					url: 'http://dev.example.com/upload-image',
+				};
+
+				request(options, function(res){
+					console.log('cors...响应');
+					console.log(res.data);
+
+					// 把照片渲染到body
+					if(res.status){
+						var image = new Image();
+			            image.src = res.data;
+
+			            document.body.appendChild(image)
+					}
+
+				})
+			}
+		}
+
+		// 初始化请求个数
+		window.requestIndex = 0;
+
+		function request(options, next){
+
+			let targetName = 'upload_' + requestIndex;
+
+			// 创建forma对象
+			function createFormData(){
+				//创建form对象
+				var formData = new FormData();
+
+				let data = options.data || {};
+
+				for(let key in data){
+					formData.append(key, data[key]);
+				}
+
+				formData.method  = options.methods.toLocaleUpperCase() || "POST";
+				formData.enctype = options.enctype || "multipart/form-data";
+
+				//设置targe
+				formData.target = targetName;
+			}
+
+			// 创建iframe
+			
+
+			
+		}
+	</script>
+</body>
+</html>

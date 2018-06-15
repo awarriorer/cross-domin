@@ -1,6 +1,5 @@
 var express    = require('express');
 var fileUpload = require('express-fileupload');
-var fs         = require('fs');
 var app        = express();
 // view
 app.set('views', __dirname + '/view');//模板目录
@@ -18,7 +17,7 @@ var resData = {
 }
 
 /**
- * 配置cros
+ * 配置cors
  * 需要路由声明之前执行
  */  
 app.all('*', function(req, res, next) {
