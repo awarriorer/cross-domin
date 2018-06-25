@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>nginx示例</title>
+	<title>nginx-proxy示例</title>
 </head>
 <body>
 	<button id="but">执行请求</button>
@@ -18,7 +18,7 @@
 				let options = {
 					methods: 'get',
 					//注意，这里是在请求本域名的api接口，但是本域名下并没有这个接口
-					url: '/api/get-name',
+					url: '/nginx-proxy-api/get-name',
 				};
 
 				request(options, function(res){
@@ -29,7 +29,7 @@
 		}
 
 		function request(options, next){
-			var xhr = new XMLHttpRequest(); 
+			var xhr = new XMLHttpRequest();
 			var methods = options.methods.toLocaleUpperCase();
 			// 异步传输
 			xhr.open(methods, options.url, true);

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>upload-post-message</title>
+
+	<script type="text/javascript">
+		let renderData = <%- data%>
+	</script>
+</head>
+<body>
+	<script type="text/javascript">
+		window.onload = () =>{
+
+			// 把数据广播出去
+			window.parent.postMessage(JSON.stringify(renderData), '*');
+
+		}
+
+	</script>
+
+</body>
+</html>

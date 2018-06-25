@@ -5,7 +5,9 @@
 	<title>iframe-form-postMessage-upload示例</title>
 </head>
 <body>
-	<input type="file" id="but">
+	<div id="butParent">
+		<input type="file" name="image" id="but">
+	</div>
 
 	<script type="text/javascript">
 
@@ -18,9 +20,11 @@
 				let options = {
 					methods: 'post',
 					data:{
-						image: e.target.files[0],
+						// image: e.target.files[0],
 					},
-					url: 'http://dev.example.com/upload-image',
+					url: 'http://dev.example.com/iframe-form-postMessage-upload',
+					fileDom: this,
+					fileParentDom: document.querySelector("#butParent")
 				};
 
 				request(options, function(res){
@@ -29,7 +33,7 @@
 
 					// 把照片渲染到body
 					if(res.status){
-						var image = new Image();
+						let image = new Image();
 			            image.src = res.data;
 
 			            document.body.appendChild(image)
@@ -43,32 +47,142 @@
 		window.requestIndex = 0;
 
 		function request(options, next){
+			// 请求次数自增，避免下次请求时回调执行絮乱
+			requestIndex++;
 
 			let targetName = 'upload_' + requestIndex;
 
-			// 创建forma对象
-			function createFormData(){
+			options.url += `?callback=${targetName}`
+
+			//form表单对象
+			let FormData  = null;
+			// 提交
+			let submitBut = null;
+			//ifrmae
+			let Iframe    = null;
+
+			createForm();
+
+			//创建form对象
+			function createForm(){
 				//创建form对象
-				var formData = new FormData();
+				FormData = document.createElement("form");
+				/*
+					设置form提交地址
+					如果存在iframeUrl,那么将会读取iframeUrl，否则，用原地址
+				*/
+				FormData.action = options.url;
 
-				let data = options.data || {};
+				//提交类型
+				FormData.method = "POST";
 
-				for(let key in data){
-					formData.append(key, data[key]);
-				}
-
-				formData.method  = options.methods.toLocaleUpperCase() || "POST";
-				formData.enctype = options.enctype || "multipart/form-data";
+				//设置规定在发送表单数据之前如何对其进行编码。
+				FormData.enctype = options.enctype || "multipart/form-data"
 
 				//设置targe
-				formData.target = targetName;
+				FormData.target = targetName;
+
+				// 文件对象,
+				if(options.fileDom){
+					FormData.appendChild(options.fileDom);
+				}
+
+				//填充数据
+				let optionsData = options.data || {};
+
+				for(let key in optionsData){
+					let itemInput = document.createElement("input");
+					
+					itemInput.type  = "hidden";
+					itemInput.name  = key;
+					itemInput.value = optionsData[key];
+
+					FormData.appendChild(itemInput);
+				}
+
+				//提交
+				submitBut = document.createElement("input");
+
+				submitBut.type  = "submit";
+				submitBut.value = "开始上传";
+
+				FormData.appendChild(submitBut);
+
+				//开始创建iframe
+				createIframe();
 			}
 
-			// 创建iframe
-			
+			//创建iframe
+			function createIframe(){
+				//创建iframe
+				Iframe = document.createElement("iframe");
+				//设置目标
+				Iframe.name = targetName;
 
+				//开始追加元素
+				appendCild();
+			}
+
+			//添加元素
+			function appendCild(){
+
+				let div = document.createElement("div");
+
+				div.id  = targetName;
+
+				div.appendChild(FormData);
+				div.appendChild(Iframe);
+
+				//把iframe追加到body
+				document.body.appendChild(div);
+
+				// 定义回调名称
+				window[targetName] = function(res){
+					// 删除已经当前执行过的script
+					removeDom(targetName);
+					// 执行回调
+					next(res);
+					
+				}
+
+				//开始提交
+				submitBut.click();
+			}
+
+			//删除form和iframe
+			function removeDom(id){
+				let div = document.querySelector(`#${id}`);
+
+				// 先把input file放回到原位置
+				if(options.fileDom && options.fileParentDom){
+					options.fileParentDom.appendChild(options.fileDom);
+				}
+
+				if(div){
+					document.body.removeChild(div);	
+				}
+			}
 			
 		}
+
+		window.addEventListener("message", function(event){
+			let data = {};
+
+			if(event.data){
+				data = JSON.parse(event.data);
+			}
+
+			let callbackName = data.callback;
+
+			if(callbackName){
+				delete data.callback;
+			}
+
+			// 执行回调
+			typeof window[callbackName] === 'function' && window[callbackName](data);
+
+		}, false);
+
 	</script>
 </body>
 </html>

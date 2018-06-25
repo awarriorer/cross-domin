@@ -20,7 +20,7 @@ var resData = {
  * 配置cors
  * 需要路由声明之前执行
  */  
-app.all('*', function(req, res, next) {
+app.all('/get-name', function(req, res, next) {
 	//来访的域名
 	let origin   = req.headers.origin;
 	// 允许访问的白名单
@@ -41,10 +41,6 @@ app.all('*', function(req, res, next) {
 	next();
 });
 
-// set router
-app.get('/', function(req, res){
-	res.send('Hello World!');
-});
 
 // 正常请求
 app.get('/get-name', function(req, res){
@@ -61,7 +57,7 @@ app.get('/iframe-postMessage', function(req, res){
 	res.render('post-message');
 });
 
-// 正常请求
+// 正常上传文件
 app.post('/upload-image', function(req, res){
 	let data = {
 		status: 0,
@@ -83,6 +79,43 @@ app.post('/upload-image', function(req, res){
 		res.json({
 			status: 1,
 			data: `http://dev.example.com/${image.name}`,
+		})
+
+	});
+
+});
+
+// 正常上传文件
+app.post('/iframe-form-postMessage-upload', function(req, res){
+	let callbackName = req.query.callback || 'none';
+	let data = {
+		status: 0,
+		mes: "没有获取到文件",
+		callback: callbackName,
+	}
+
+	if(!req.files){
+		res.render('upload-post-message', {
+			data: JSON.stringify(data)
+		})
+
+		return;
+	}
+
+	// 获取到上传的文件
+	let image = req.files.image;
+
+	// 把文件存到本地
+	image.mv(`./upload-file/${image.name}`, function(){
+
+		data = {
+			status: 1,
+			data: `http://dev.example.com/${image.name}`,
+			callback: callbackName,
+		};
+
+		res.render('upload-post-message', {
+			data: JSON.stringify(data)
 		})
 
 	});

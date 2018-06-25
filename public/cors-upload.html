@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>cros示例</title>
+	<title>cros-upload示例</title>
 </head>
 <body>
 	<input type="file" id="but">
@@ -35,7 +35,7 @@
 						var image = new Image();
 			            image.src = res.data;
 
-			            document.body.appendChild(image)
+			           document.body.appendChild(image)
 					}
 
 				})
@@ -43,7 +43,7 @@
 		}
 
 		function request(options, process, next){
-			var xhr = new XMLHttpRequest(); 
+			var xhr = new XMLHttpRequest();
 			var methods = options.methods.toLocaleUpperCase();
 
 			// 异步传输
@@ -61,8 +61,8 @@
 			xhr.upload.onprogress = function (ev) {//
 		        var percent = 0; 
 
-		        if(ev.lengthComputable) { 
-		            percent = 100 * ev.loaded / ev.total; 		            
+		        if(ev.lengthComputable) {
+		            percent = 100 * ev.loaded / ev.total;
 				}
 
 				process && process(percent);
