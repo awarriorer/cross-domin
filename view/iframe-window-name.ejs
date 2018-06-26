@@ -2,19 +2,15 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>upload-post-message</title>
+	<title>iframe-window-name</title>
 
 	<script type="text/javascript">
-		let renderData = '<%- data%>';
+		let renderData = '<%- data%>'
 	</script>
 </head>
 <body>
 	<script type="text/javascript">
-		window.onload = () =>{
-			// 把数据广播出去
-			window.parent.postMessage(renderData, '*');
-		}
-
+		window.name = renderData;
 	</script>
 
 </body>

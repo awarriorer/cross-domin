@@ -33,10 +33,10 @@
 
 			// 定义回调名称
 			window[funName] = function(res){
-				// 执行回调
-				next(res);
 				// 删除已经当前执行过的script
 				removeScript(funName);
+				// 执行回调
+				next(res);
 			}
 
 			// 创建标签

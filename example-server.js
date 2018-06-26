@@ -85,7 +85,7 @@ app.post('/upload-image', function(req, res){
 
 });
 
-// 正常上传文件
+// iframe-form-postMessage-upload
 app.post('/iframe-form-postMessage-upload', function(req, res){
 	let callbackName = req.query.callback || 'none';
 	let data = {
@@ -120,6 +120,17 @@ app.post('/iframe-form-postMessage-upload', function(req, res){
 
 	});
 
+});
+
+// 通过iframe+postMessage的请求
+app.get('/iframe-window-name/getName', function(req, res){
+	let callbackName = req.query.callback || 'none';
+
+	resData.callback = callbackName;
+
+	res.render('iframe-window-name', {
+		data: JSON.stringify(resData),
+	});
 });
 
 // start server
