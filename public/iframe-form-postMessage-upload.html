@@ -125,11 +125,10 @@
 
 			//添加元素
 			function appendCild(){
-
 				let div = document.createElement("div");
 
 				div.id  = targetName;
-
+				
 				div.appendChild(FormData);
 				div.appendChild(Iframe);
 
@@ -142,7 +141,6 @@
 					removeDom(targetName);
 					// 执行回调
 					next(res);
-					
 				}
 
 				//开始提交
@@ -162,7 +160,6 @@
 					document.body.removeChild(div);	
 				}
 			}
-			
 		}
 
 		window.addEventListener("message", function(event){
